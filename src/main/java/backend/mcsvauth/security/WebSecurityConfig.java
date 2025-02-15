@@ -6,6 +6,7 @@ import backend.mcsvauth.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -28,14 +29,14 @@ public class WebSecurityConfig {
     private JwtUtils jwtUtils;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .httpBasic(withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
+                .authorizeHttpRequests(http -> http.requestMatchers(HttpMethod.POST, "/api/auth/log-in").permitAll());
 
-        return http
+        return httpSecurity
                 .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class) //se agrega el filtro que valida el token antes del filtro de autenticacion basicas
                 .build();
     }
