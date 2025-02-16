@@ -29,7 +29,7 @@ public class JwtUtils {
         //se define que algoritmo de encriptacion usar
         Algorithm algorithm = Algorithm.HMAC256(key);
 
-        String username = authentication.getPrincipal().toString();
+        String username = authentication.getName();
 
         //se obtienen los roles del usuario logueado y se concatenan en un string separados por comas
         String authorities = authentication.getAuthorities()
@@ -44,7 +44,7 @@ public class JwtUtils {
         String jwtToken = JWT.create()
                 .withSubject(username)
                 .withIssuer(userGenerator)
-                .withClaim("roles", authorities)
+                .withClaim("authorities", authorities)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 1800000))
                 .withJWTId(UUID.randomUUID().toString())
