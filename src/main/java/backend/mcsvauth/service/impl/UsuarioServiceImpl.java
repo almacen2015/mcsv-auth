@@ -2,8 +2,11 @@ package backend.mcsvauth.service.impl;
 
 import backend.mcsvauth.models.dto.AuthLoginRequest;
 import backend.mcsvauth.models.dto.AuthResponse;
+import backend.mcsvauth.models.dto.UsuarioDtoRequest;
+import backend.mcsvauth.models.dto.UsuarioDtoResponse;
 import backend.mcsvauth.models.entity.Usuario;
 import backend.mcsvauth.repository.UsuarioRepository;
+import backend.mcsvauth.service.UsuarioService;
 import backend.mcsvauth.util.JwtUtils;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,8 +25,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UsuarioServiceImpl implements UserDetailsService {
-    private UsuarioRepository usuarioRepository;
+public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
+
+    private final UsuarioRepository usuarioRepository;
     private final JwtUtils jwtUtils;
     private final PasswordEncoder passwordEncoder;
 
@@ -89,5 +93,10 @@ public class UsuarioServiceImpl implements UserDetailsService {
         }
 
         return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
+    }
+
+    @Override
+    public UsuarioDtoResponse crearUsuario(UsuarioDtoRequest crearUsuarioDtoRequest) {
+        return null;
     }
 }
