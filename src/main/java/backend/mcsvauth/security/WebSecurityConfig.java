@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,12 +22,16 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-@EnableWebSecurity
 @Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
 public class WebSecurityConfig {
 
-    @Autowired
-    private JwtUtils jwtUtils;
+    private final JwtUtils jwtUtils;
+
+    public WebSecurityConfig(JwtUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -34,11 +39,17 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .httpBasic(withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(http -> http.requestMatchers(HttpMethod.POST, "/api/auth/log-in").permitAll());
+                .authorizeHttpRequests(http -> http.requestMatchers(HttpMethod.POST, "/api/auth/log-in").permitAll())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()  // Permitir Swagger sin autenticación
+                        .anyRequest().authenticated()
+                ).addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class);
 
-        return httpSecurity
-                .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class) //se agrega el filtro que valida el token antes del filtro de autenticacion basicas
-                .build();
+        return httpSecurity.build();
     }
 
     @Bean

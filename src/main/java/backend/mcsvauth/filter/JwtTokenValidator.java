@@ -33,6 +33,9 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         String jwtToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        if (esUriSwagger(request, response, filterChain)) return;
+
         if (jwtToken != null) {
             jwtToken = jwtToken.substring(7);
 
@@ -58,5 +61,22 @@ public class JwtTokenValidator extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private boolean esUriSwagger(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        String[] swaggerWhiteList = {
+                "/swagger-ui",
+                "/v3/api-docs"
+        };
+
+        String uri = request.getRequestURI();
+
+        for (String path : swaggerWhiteList) {
+            if (uri.contains(path)) {
+                filterChain.doFilter(request, response);
+                return true;
+            }
+        }
+        return false;
     }
 }
