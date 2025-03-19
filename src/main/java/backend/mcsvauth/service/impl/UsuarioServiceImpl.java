@@ -1,10 +1,11 @@
 package backend.mcsvauth.service.impl;
 
 import backend.mcsvauth.exception.AuthException;
-import backend.mcsvauth.mappers.PermisoMapper;
-import backend.mcsvauth.mappers.RolMapper;
 import backend.mcsvauth.mappers.UsuarioMapper;
-import backend.mcsvauth.models.dto.*;
+import backend.mcsvauth.models.dto.AuthLoginRequest;
+import backend.mcsvauth.models.dto.AuthResponse;
+import backend.mcsvauth.models.dto.UsuarioDtoRequest;
+import backend.mcsvauth.models.dto.UsuarioDtoResponse;
 import backend.mcsvauth.models.entity.Rol;
 import backend.mcsvauth.models.entity.Usuario;
 import backend.mcsvauth.repository.RolRepository;
@@ -37,8 +38,6 @@ public class UsuarioServiceImpl implements UserDetailsService, UsuarioService {
     private final JwtUtils jwtUtils;
     private final PasswordEncoder passwordEncoder;
     private final UsuarioMapper usuarioMapper = UsuarioMapper.INSTANCE;
-    private final RolMapper rolMapper = RolMapper.INSTANCE;
-    private final PermisoMapper permisoMapper = PermisoMapper.INSTANCE;
 
     public UsuarioServiceImpl(UsuarioRepository usuarioRepository, RolRepository rolRepository, JwtUtils jwtUtils, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
