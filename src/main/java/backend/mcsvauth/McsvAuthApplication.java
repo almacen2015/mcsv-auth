@@ -4,12 +4,12 @@ import backend.mcsvauth.models.entity.Permiso;
 import backend.mcsvauth.models.entity.Rol;
 import backend.mcsvauth.models.entity.RolEnum;
 import backend.mcsvauth.models.entity.Usuario;
-import backend.mcsvauth.repository.RolRepository;
 import backend.mcsvauth.repository.UsuarioRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 import java.util.Set;
 
@@ -21,6 +21,7 @@ public class McsvAuthApplication {
     }
 
     @Bean
+    @Profile("test")
     CommandLineRunner init(UsuarioRepository usuarioRepository) {
         return args -> {
             Permiso createPermiso = Permiso.builder()
