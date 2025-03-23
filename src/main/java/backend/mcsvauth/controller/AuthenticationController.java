@@ -42,7 +42,6 @@ public class AuthenticationController {
         return new ResponseEntity<>(this.userDetailsService.loginUser(userRequest), HttpStatus.OK);
     }
 
-    @SecurityRequirement(name = "BearerAuth")
     @Operation(summary = "Registrar usuario", description = "Registra un nuevo usuario")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario registrado"),

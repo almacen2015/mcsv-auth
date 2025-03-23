@@ -40,6 +40,7 @@ public class WebSecurityConfig {
                 .httpBasic(withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> http.requestMatchers(HttpMethod.POST, "/api/auth/log-in").permitAll())
+                .authorizeHttpRequests(http -> http.requestMatchers(HttpMethod.POST, "/api/auth/registrar").permitAll())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/swagger-ui.html",
